@@ -1,0 +1,5 @@
+cluster_certificate_authority_data = <sensitive>
+cluster_endpoint = "https://484696A3A32F4E44D816E16D8D1A7186.gr7.us-east-1.eks.amazonaws.com"
+cluster_name = "sample-python-app-cluster"
+ecr_repository_url = "177359412871.dkr.ecr.us-east-1.amazonaws.com/sample-python-app"
+github_actions_role_arn = "arn:aws:iam::177359412871:role/github-actions-eks-role"
