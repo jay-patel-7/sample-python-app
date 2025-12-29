@@ -102,44 +102,44 @@ jobs:
   #       LB_URL=$(kubectl get service sample-python-app-service -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
   #       echo "Application URL: http://$LB_URL"
 
-deploy-to-eks:
-  name: Deploy to EKS
-  needs: build-and-push
-  runs-on: ubuntu-latest
-  
-  permissions:
-    id-token: write
-    contents: read
-  
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  deploy-to-eks:
+    name: Deploy to EKS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Update kubeconfig
-      run: |
-        aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
-    - name: Deploy to EKS
-      run: |
-        kubectl apply -f k8s/deployment.yaml
-        kubectl rollout status deployment/sample-python-app -n default --timeout=5m
+      - name: Deploy to EKS
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl rollout status deployment/sample-python-app -n default --timeout=5m
 
-    - name: Verify deployment
-      run: |
-        kubectl get deployments -n default
-        kubectl get services -n default
-        kubectl get hpa -n default
-        
-    - name: Get LoadBalancer URL
-      run: |
-        echo "Waiting for LoadBalancer to be ready..."
-        kubectl wait --for=condition=ready --timeout=300s service/sample-python-app-service -n default || true
-        LB_URL=$(kubectl get service sample-python-app-service -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-        echo "Application URL: http://$LB_URL"
+      - name: Verify deployment
+        run: |
+          kubectl get deployments -n default
+          kubectl get services -n default
+          kubectl get hpa -n default
+          
+      - name: Get LoadBalancer URL
+        run: |
+          echo "Waiting for LoadBalancer to be ready..."
+          kubectl wait --for=condition=ready --timeout=300s service/sample-python-app-service -n default || true
+          LB_URL=$(kubectl get service sample-python-app-service -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "Application URL: http://$LB_URL"
