@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: sample-python-app
-        image: 177359412871.dkr.ecr.us-east-1.amazonaws.com/sample-python-app:latest
+        # image: 177359412871.dkr.ecr.us-east-1.amazonaws.com/sample-python-app:latest
+        image: 177359412871.dkr.ecr.us-east-1.amazonaws.com/sample-python-app:IMAGE_TAG
         ports:
         - containerPort: 5001
         resources:
