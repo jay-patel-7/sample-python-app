@@ -102,7 +102,7 @@ jobs:
   #       LB_URL=$(kubectl get service sample-python-app-service -n default -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
   #       echo "Application URL: http://$LB_URL"
 
-  deploy-to-eks:
+deploy-to-eks:
   name: Deploy to EKS
   needs: build-and-push
   runs-on: ubuntu-latest
